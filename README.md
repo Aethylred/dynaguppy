@@ -32,6 +32,7 @@ $ cd /etc
 $ rm -rf puppet
 $ git clone https://github.com/Aethylred/dynaguppy.git puppet
 ```
+1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname.
 1. ???
 1. Profit
 
