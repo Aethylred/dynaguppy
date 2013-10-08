@@ -31,5 +31,7 @@ _ReSharper*/
 .vagrant/
 .environments/
 *~
+Puppetfile.lock
+.librarian/
 .tmp/
 modules/

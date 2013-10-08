@@ -36,6 +36,10 @@ $ cd /etc
 $ rm -rf puppet
 $ git clone https://github.com/Aethylred/dynaguppy.git puppet
 ```
+1. Bootstrap the Puppet modules managed with librarian-puppet:  
+```
+$ librarian-puppet install --clean
+```
 1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname.
 1. ???
 1. Profit

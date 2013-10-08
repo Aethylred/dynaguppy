@@ -1,10 +1,6 @@
+# This Puppetfile was distributed with Dynaguppy
+# https://github.com/Aethylred/dynaguppy
 forge "http://forge.puppetlabs.com"
 
-# mod 'puppetlabs/stdlib'
-
-# mod 'ntp',
-#   :git => 'git://github.com/puppetlabs/puppetlabs-ntp.git'
-
-# mod 'apt',
-#   :git => 'https://github.com/puppetlabs/puppetlabs-apt.git',
-#   :ref => 'feature/master/dans_refactor'
+mod 'puppetlabs/stdlib', '4.1.0'
+mod 'puppetlabs/apt', '1.3.0'
