@@ -26,6 +26,10 @@ $ apt-get install puppet
 ```
 $ apt-get install git
 ```
+1. Install librarian-puppet:
+```
+$ gem install librarian-puppet
+```
 1. Replace the default puppet configuration with Dynaguppy:  
 ```
 $ cd /etc

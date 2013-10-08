@@ -31,3 +31,5 @@ _ReSharper*/
 .vagrant/
 .environments/
 *~
+.tmp/
+modules/
