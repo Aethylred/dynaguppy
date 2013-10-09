@@ -44,6 +44,25 @@ $ librarian-puppet install --clean
 1. ???
 1. Profit
 
+# Upgrading Ruby
+
+Dynaguppy installs and pins Ruby to version 1.8.7 as this is compatible across the range of Puppet versions that are available from the Linux distribution package repositories. Once Dynaguppy has bootstrapped Puppet to version 3.x it should be possible to upgrade to Ruby 1.9.3 or 2.x. Be sure to check the [Ruby compatibility guide](http://docs.puppetlabs.com/guides/platforms.html#ruby-versions) in the Puppet documentation
+
+## Ruby, RVM vs. Package Managers
+
+It would seem there is ongoing issues with Ruby being installed with the native package managers for some Linux distributions.
+
+The Ruby community insist that Ruby and Ruby Gems should only be maintained with Ruby tools (such as [RVM](https://rvm.io/)) as Ruby development is rapid and Ruby developers know best to what Ruby versions and gems should be installed.
+
+This is correct for a cutting-edge development environment.
+
+The Linux distrubutors insist that software and applications are distributed through their respective package managers as they have been put through testing and QA systems to verify their integrity and compatibility with their Linux distribution.
+
+This is correct for a stable and consistent operating system.
+
+This situation has been intractible for this project, hence a neutral position will be taken. Ruby will be used as it is installed as a dependency of Puppet (as a package from the distribution package repository). The Ruby module included with Dynaguppy will only be used to configure the Ruby environment.
+
+Do not be surprised if this changes through the development of Dynaguppy.
 
 # Attribution
 
