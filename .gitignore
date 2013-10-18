@@ -34,4 +34,6 @@ _ReSharper*/
 Puppetfile.lock
 .librarian/
 .tmp/
-modules/
+modules/*
+!modules/role/
+!modules/profile/

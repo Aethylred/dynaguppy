@@ -44,9 +44,17 @@ $ librarian-puppet install --clean
 1. ???
 1. Profit
 
+# Role and Profile
+
+As Dynaguppy uses `librarian-puppet` to manage modules, most of the module subdirectories are ignored by Git, the exceptions are the `role` and the `profile` subdirectories.
+
+The use of roles and profiles in Dynaguppy is based on the [presentation and examples](https://github.com/hunner/roles_and_profiles) by [Hunter Haugen](https://github.com/hunner) at [PuppetConf 2013](http://puppetconf.com/), which is in turn was based on a [similar presentation](http://www.slideshare.net/PuppetLabs/roles-talk) given by Craig Dunn at [Puppet Camp Stockholm 2013](http://puppetlabs.com/community/puppet-camp#previous).
+
 # Upgrading Ruby
 
 Dynaguppy installs and pins Ruby to version 1.8.7 as this is compatible across the range of Puppet versions that are available from the Linux distribution package repositories. Once Dynaguppy has bootstrapped Puppet to version 3.x it should be possible to upgrade to Ruby 1.9.3 or 2.x. Be sure to check the [Ruby compatibility guide](http://docs.puppetlabs.com/guides/platforms.html#ruby-versions) in the Puppet documentation
+
+Ruby has poor heap management and inefficient garbage collection it is recommended that Ruby to be upgraded to 1.9.3 or later.
 
 ## Ruby, RVM vs. Package Managers
 
