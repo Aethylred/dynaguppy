@@ -8,33 +8,34 @@ Dynaguppy](dynaguppy) is a self-deploying Puppet configuration that uses [Git](g
 
 # Vagrant
 
-There is a [testing harness set up for dynaguppy](harness) using [Vagrant](vagrant) to provisions virtual machines into [VirtualBox](vbox). Vagrant and VirtualBox will need to be installed and configured for your development and testing environment.
-[vagrant]:http://www.vagrantup.com/
-[vbox]:https://www.virtualbox.org/
-[harness]:https://github.com/Aethylred/dynaguppy-harness
+There is a [testing harness set up for dynaguppy](https://github.com/Aethylred/dynaguppy-harness) using [Vagrant](http://www.vagrantup.com/) to provisions virtual machines into [VirtualBox](https://www.virtualbox.org/). Vagrant and VirtualBox will need to be installed and configured for your development and testing environment.
 
 # Installation
 
 Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up as a Puppet Master, other distributions should work, but have not yet been tested.
 
 1. Start with a fresh server install with network and hostname configured, and login as root.
-1. Install puppet and rubygems, any version after 2.6 is sufficient as Dynaguppy will upgrade to 3.3.2 by default:  
-```
-$ apt-get install puppet rubygems
-```
 1. Install git:  
 ```
 $ apt-get install git
-```
-1. Install librarian-puppet:
-```
-$ gem install librarian-puppet
 ```
 1. Replace the default puppet configuration with Dynaguppy:  
 ```
 $ cd /etc
 $ rm -rf puppet
-$ git clone https://github.com/Aethylred/dynaguppy.git puppet
+$ git clone --recursive https://github.com/Aethylred/dynaguppy.git puppet
+```
+1. Change to the puppet configuration directory  
+```
+cd /etc/puppet
+```
+1. Bootstrap the puppet repositories and installation (**Note:** use the bootstrap script appropriate for your OS):  
+```
+./bootstrap/ubuntu.sh
+```
+1. Install librarian-puppet:
+```
+$ gem install librarian-puppet
 ```
 1. Bootstrap the Puppet modules managed with librarian-puppet:  
 ```
@@ -52,7 +53,7 @@ The use of roles and profiles in Dynaguppy is based on the [presentation and exa
 
 # Upgrading Ruby
 
-Dynaguppy installs and pins Ruby to version 1.8.7 as this is compatible across the range of Puppet versions that are available from the Linux distribution package repositories. Once Dynaguppy has bootstrapped Puppet to version 3.x it should be possible to upgrade to Ruby 1.9.3 or 2.x. Be sure to check the [Ruby compatibility guide](http://docs.puppetlabs.com/guides/platforms.html#ruby-versions) in the Puppet documentation
+Dynaguppy runs on Ruby version 1.8.7 as this is compatible across the range of Puppet versions that are available from the Linux distribution package repositories. Once Dynaguppy has bootstrapped Puppet to version 3.x it should be possible to upgrade to Ruby 1.9.3 or 2.x. Be sure to check the [Ruby compatibility guide](http://docs.puppetlabs.com/guides/platforms.html#ruby-versions) in the Puppet documentation
 
 Ruby has poor heap management and inefficient garbage collection it is recommended that Ruby to be upgraded to 1.9.3 or later.
 
@@ -71,6 +72,12 @@ This is correct for a stable and consistent operating system.
 This situation has been intractible for this project, hence a neutral position will be taken. Ruby will be used as it is installed as a dependency of Puppet (as a package from the distribution package repository). The Ruby module included with Dynaguppy will only be used to configure the Ruby environment.
 
 Do not be surprised if this changes through the development of Dynaguppy.
+
+# Contributions
+
+## Bootstrap scripts
+
+The Puppet bootstrap scripts used in Dynaguppy are provided by the [Hashicorp](http://www.hashicorp.com/) [puppet bootstrap scripts](https://github.com/hashicorp/puppet-bootstrap) that are are recommended to bootstrap puppet for [Vagrant](http://www.vagrantup.com/).
 
 # Attribution
 
