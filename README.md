@@ -18,9 +18,9 @@ There is a [testing harness set up for dynaguppy](harness) using [Vagrant](vagra
 Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up as a Puppet Master, other distributions should work, but have not yet been tested.
 
 1. Start with a fresh server install with network and hostname configured, and login as root.
-1. Install puppet, any version after 2.6 is sufficient as Dynaguppy will upgrade to 3.3.2 by default:  
+1. Install puppet and rubygems, any version after 2.6 is sufficient as Dynaguppy will upgrade to 3.3.2 by default:  
 ```
-$ apt-get install puppet
+$ apt-get install puppet rubygems
 ```
 1. Install git:  
 ```
@@ -38,7 +38,7 @@ $ git clone https://github.com/Aethylred/dynaguppy.git puppet
 ```
 1. Bootstrap the Puppet modules managed with librarian-puppet:  
 ```
-$ librarian-puppet install --clean
+$ librarian-puppet install
 ```
 1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname.
 1. ???
