@@ -31,10 +31,12 @@ _ReSharper*/
 .vagrant/
 .environments/
 *~
-puppet.conf
+puppet.conf*
 Puppetfile.lock
 .librarian/
 .tmp/
 modules/*
 !modules/role/
 !modules/profile/
+hiera.yaml
+hieradata/
