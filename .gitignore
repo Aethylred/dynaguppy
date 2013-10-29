@@ -38,5 +38,6 @@ Puppetfile.lock
 modules/*
 !modules/role/
 !modules/profile/
+!modules/repository/
 hiera.yaml
 hieradata/

@@ -37,7 +37,7 @@ cd /etc/puppet
 ```
 $ gem install librarian-puppet
 ```
-1. Bootstrap the Puppet modules managed with librarian-puppet:  
+1. Bootstrap the Puppet modules managed with librarian-puppet (**NOTE:** do not use the `--clean` flag, this will destroy module directories that are not managed by librarian-puppet, uncluding some used by Dynaguppy):  
 ```
 $ librarian-puppet install
 ```
