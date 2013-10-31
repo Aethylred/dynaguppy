@@ -18,3 +18,7 @@ mod 'ruby',
 mod 'puppet',
   :git => 'https://github.com/nesi/puppet-puppet.git',
   :ref => 'refactor'
+
+mod 'git',
+  :git => 'https://github.com/nesi/puppet-git.git',
+  :ref => 'refactor'
