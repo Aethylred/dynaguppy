@@ -41,3 +41,4 @@ modules/*
 !modules/repository/
 hiera.yaml
 hieradata/
+etckeeper-commit*
