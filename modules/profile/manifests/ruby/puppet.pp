@@ -6,5 +6,7 @@ class profile::ruby::puppet {
   class{'ruby':
    version  => '2.0.0',
    switch   => true,
+   require  => Class['repository::ruby'],
   }
+  include ruby::dev
 }
