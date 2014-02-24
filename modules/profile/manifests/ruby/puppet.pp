@@ -2,11 +2,11 @@
 # puppet agent
 class profile::ruby::puppet {
   # Install Ruby 2.0 from brightbox
-  include repository::ruby
+  # include repository::ruby
   class{'ruby':
-   version  => '2.0.0',
+   version  => '1.9.1',
    switch   => true,
-   require  => Class['repository::ruby'],
+   #require  => Class['repository::ruby'],
   }
   include ruby::dev
 }

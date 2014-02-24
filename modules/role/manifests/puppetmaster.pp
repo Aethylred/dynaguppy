@@ -9,4 +9,5 @@ class role::puppetmaster {
 
   # These profiles are specific to a puppetmaster
   include profile::apache::puppetmaster
+  include profile::puppetmaster
 }

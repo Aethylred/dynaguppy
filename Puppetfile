@@ -23,4 +23,4 @@ mod 'git',
   :git => 'https://github.com/nesi/puppet-git.git',
   :ref => 'refactor'
 
-mod 'puppetlabs/apache', '0.9.0'
+mod 'puppetlabs/apache', '0.11.0'

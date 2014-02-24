@@ -9,5 +9,6 @@ class profile::apache::puppetmaster {
     passenger_stat_throttle_rate  => 120,
     rack_autodetect               => 'off',
     rails_autodetect              => 'off',
+    require                       => Package['ruby'],
   }
 }
