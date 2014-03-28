@@ -33,7 +33,8 @@ _ReSharper*/
 *~
 puppet.conf*
 Puppetfile.lock
-.librarian/
+.librarian/*
+!.librarian/puppet/
 .tmp/
 modules/*
 !modules/role/
