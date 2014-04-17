@@ -31,15 +31,11 @@ _ReSharper*/
 .vagrant/
 .environments/
 *~
-puppet.conf*
 Puppetfile.lock
 .librarian/*
 !.librarian/puppet/
 .tmp/
-modules/*
-!modules/role/
-!modules/profile/
-!modules/repository/
+library/*
 hiera.yaml
 hieradata/
 etckeeper-commit*
