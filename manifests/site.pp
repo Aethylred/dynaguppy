@@ -7,5 +7,3 @@
 stage { 'prep_repos':
   before => Stage['main'],
 }
-
-import './dynaguppy/*'
