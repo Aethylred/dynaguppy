@@ -15,33 +15,64 @@ There is a [testing harness set up for dynaguppy](https://github.com/Aethylred/d
 Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up as a Puppet Master, other distributions should work, but have not yet been tested.
 
 1. Start with a fresh server install with network and hostname configured, and login as root.
-1. Install git:  
-```
-$ apt-get install git
-```
-1. Replace the default puppet configuration with Dynaguppy:  
-```
-$ cd /etc
-$ rm -rf puppet
-$ git clone --recursive https://github.com/Aethylred/dynaguppy.git puppet
-```
-1. Change to the puppet configuration directory  
-```
-cd /etc/puppet
-```
-1. Bootstrap the puppet repositories and installation (**Note:** use the bootstrap script appropriate for your OS):  
-```
-./bootstrap/ubuntu.sh
-```
+1. Make sure that the hostname and fully qualified domain name are configured correctly.
+1. Update all packages (restart if required):
+
+    ```shell
+    $ apt-get dist-upgrade
+    ```
+
+1. Install git:
+
+    ```
+    $ apt-get install git
+    ```
+
+1. Replace the default puppet configuration with Dynaguppy:
+
+    ```
+    $ cd /etc
+    $ rm -rf puppet
+    $ git clone --recursive https://github.com/Aethylred/dynaguppy.git puppet
+    ```
+
+1. Change to the puppet configuration directory
+
+    ```
+    cd /etc/puppet
+    ```
+
+1. Bootstrap the puppet repositories and installation (**Note:** use the bootstrap script appropriate for your OS):
+
+    ```
+    ./bootstrap/ubuntu.sh
+    ```
+
 1. Install librarian-puppet:
-```
-$ gem install librarian-puppet
-```
-1. Bootstrap the Puppet modules managed with librarian-puppet (**NOTE:** do not use the `--clean` flag, this will destroy module directories that are not managed by librarian-puppet, uncluding some used by Dynaguppy):  
-```
-$ librarian-puppet install
-```
-1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname.
+
+    ```
+    $ gem install librarian-puppet
+    ```
+
+1. Bootstrap the Puppet modules managed with librarian-puppet (**NOTE:** Dynaguppy has librarian-puppet install modules into `/etc/puppet/library`):
+
+    ```
+    $ librarian-puppet install
+    ```
+
+1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname. Verify that this name matches the output from `facter fqdn`
+1. Initialise the Puppetmaster SSL environment (*NOTE:* run the command and exit with `^C` after a minute or two to allow SSL certificates to generate):
+
+    ```
+    $ puppet master --no-daemonize
+    ```
+
+1. Use puppet to bootstrap the puppetmaster service:
+
+    ```
+    $ puppet apply -t /etc/puppet/manifests
+    ```
+
 1. ???
 1. Profit
 

@@ -39,3 +39,4 @@ library/*
 hiera.yaml
 hieradata/
 etckeeper-commit*
+*.dpkg-dist

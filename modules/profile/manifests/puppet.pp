@@ -2,8 +2,11 @@
 class profile::puppet {
   class{'::puppet':
     ensure  => installed,
-    require => Package['ruby'],
+    require => [Package['ruby']],
   }
-  include ::puppet::conf
+  class{'puppet::conf':
+    module_path           => ['$confdir/library'],
+    append_basemodulepath => true,
+  }
   include ::puppet::hiera
 }
