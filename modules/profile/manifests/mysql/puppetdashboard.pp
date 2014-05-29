@@ -7,4 +7,10 @@ class profile::mysql::puppetdashboard {
       }
     },
   }
+  class {'mysql::bindings':
+    ruby_enable               => true,
+    ruby_package_ensure       => 'latest',
+    client_dev                => true,
+    client_dev_package_ensure => 'latest',
+  }
 }

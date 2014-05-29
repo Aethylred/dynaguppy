@@ -14,7 +14,7 @@ class profile::apache::puppetmaster {
     require                       => [Package['ruby'],Class['ruby::dev']],
   }
   package {'passenger-common1.9.1':
-    ensure    => installed,
-    require   => Class['apache::mod::passenger'],
+    ensure    => latest,
+    require   => Class['apache::mod::passenger','ruby::dev'],
   }
 }

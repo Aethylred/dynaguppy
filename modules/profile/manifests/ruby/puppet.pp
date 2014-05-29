@@ -1,5 +1,4 @@
-# This profile defines the ruby configuration profile for the
-# puppet agent
+# This profile defines the ruby configuration profile for the puppet agent, puppetmaster and puppet-dashboard
 class profile::ruby::puppet {
   # Install Ruby from brightbox
   include repository::ruby
@@ -9,5 +8,7 @@ class profile::ruby::puppet {
     latest_release  => true,
     require         => Class['repository::ruby'],
   }
-  include ruby::dev
+  class {'ruby::dev':
+    require => Class['ruby'],
+  }
 }
