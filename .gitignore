@@ -40,3 +40,7 @@ hiera.yaml
 hieradata/
 etckeeper-commit*
 *.dpkg-dist
+auth.conf
+fileserver.conf
+puppetdb.conf
+routes.yaml

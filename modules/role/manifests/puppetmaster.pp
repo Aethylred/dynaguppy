@@ -12,6 +12,9 @@ class role::puppetmaster {
     'profile::apache::puppetmaster'
   ] ->
   Class[
+    'profile::puppetdb'
+  ] ->
+  Class[
     'profile::puppetmaster',
     'profile::puppetdashboard'
   ]
@@ -42,6 +45,9 @@ class role::puppetmaster {
   # These profiles are specific to a puppetmaster
   include profile::apache::puppetmaster
   include profile::puppetmaster
+
+  # These profiles are specific to running a PuppetDB
+  include profile::puppetdb
 
   # These profiles are specific to running the Puppet Dashboard
   include profile::mysql::puppetdashboard

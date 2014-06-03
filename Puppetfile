@@ -11,6 +11,7 @@ mod 'puppetlabs/apt', '1.3.0'
 mod 'puppetlabs/apache', '1.0.1'
 mod 'puppetlabs/nodejs', '0.4.0'
 mod 'puppetlabs/vcsrepo', '0.2.0'
+mod 'puppetlabs/puppetdb', '3.0.1'
 
 # Other modules with updates
 mod 'puppetlabs/ruby',
@@ -26,7 +27,7 @@ mod 'camptocamp/augeas',
 # Aethylred's modules
 mod 'Aethylred/puppet',
   :git => 'https://github.com/nesi/puppet-puppet.git',
-  :ref => '0.2.5'
+  :ref => '0.2.6'
 
 mod 'Aethylred/puppetdashboard', '0.2.2'
 mod 'Aethylred/git', '0.1.2'
