@@ -25,6 +25,7 @@ class role::puppetmaster {
   ] ->
   Class[
     'profile::mysql::puppetdashboard',
+    'profile::puppetdb',
     'nodejs',
     'profile::git'
   ] ->
