@@ -25,7 +25,7 @@ mod 'camptocamp/augeas',
 # Other modules with updates
 mod 'puppetlabs/ruby',
   :git => 'https://github.com/Aethylred/puppetlabs-ruby.git',
-  :ref => 'master'
+  :ref => 'rakebundle'
 
 
 # Aethylred's modules
@@ -33,5 +33,8 @@ mod 'Aethylred/puppet',
   :git => 'https://github.com/nesi/puppet-puppet.git',
   :ref => '0.2.6'
 
-mod 'Aethylred/puppetdashboard', '0.3.0'
+mod 'Aethylred/puppetdashboard',
+  :git => 'https://github.com/Aethylred/puppet-puppetdashboard.git',
+  :ref => 'merge_configs'
+
 mod 'Aethylred/git', '0.1.2'
