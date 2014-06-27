@@ -6,7 +6,6 @@ class role::puppetmaster {
     'profile::ruby::puppet'
   ] ->
   Class[
-    'profile::augeas',
     'profile::librarian_puppet',
     'profile::puppet',
     'profile::apache::puppetmaster'
@@ -17,6 +16,9 @@ class role::puppetmaster {
   Class[
     'profile::puppetmaster',
     'profile::puppetdashboard'
+  ] ->
+  Class[
+    'profile::mcollective::puppetmaster'
   ]
 
   Class['profile::repositories'] ->
@@ -38,7 +40,6 @@ class role::puppetmaster {
 
   include profile::git
   include profile::ruby::puppet
-  include profile::augeas
   include profile::librarian_puppet
 
   include profile::puppet
@@ -54,4 +55,7 @@ class role::puppetmaster {
   include profile::mysql::puppetdashboard
   include nodejs
   include profile::puppetdashboard
+
+  # Set up MCollective
+  include profile::mcollective::puppetmaster
 }
