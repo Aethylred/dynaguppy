@@ -16,9 +16,6 @@ class role::puppetmaster {
   Class[
     'profile::puppetmaster',
     'profile::puppetdashboard'
-  ] ->
-  Class[
-    'profile::mcollective::puppetmaster'
   ]
 
   Class['profile::repositories'] ->
@@ -56,6 +53,4 @@ class role::puppetmaster {
   include nodejs
   include profile::puppetdashboard
 
-  # Set up MCollective
-  include profile::mcollective::puppetmaster
 }
