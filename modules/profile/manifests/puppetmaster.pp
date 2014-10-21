@@ -7,7 +7,6 @@ class profile::puppetmaster{
     reporturl             => 'http://localhost/reports/upload',
     storeconfigs_backend  => 'puppetdb',
     require               => [
-      Package['passenger-common1.9.1'],
       Class[
         'apache::mod::passenger',
         'ruby::dev'

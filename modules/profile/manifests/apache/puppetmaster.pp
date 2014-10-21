@@ -13,8 +13,4 @@ class profile::apache::puppetmaster {
     rails_autodetect              => 'off',
     require                       => [Package['ruby'],Class['ruby::dev']],
   }
-  package {'passenger-common1.9.1':
-    ensure    => latest,
-    require   => Class['apache::mod::passenger','ruby::dev'],
-  }
 }
