@@ -7,3 +7,5 @@
 stage { 'prep_repos':
   before => Stage['main'],
 }
+
+$puppet_master_host = 'puppet.local'

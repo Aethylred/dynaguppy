@@ -9,8 +9,6 @@ class profile::apache::puppetmaster {
     passenger_pool_idle_time      => 1500,
     # passenger_max_requests        => 1000,
     passenger_stat_throttle_rate  => 120,
-    rack_autodetect               => 'off',
-    rails_autodetect              => 'off',
     require                       => [Package['ruby'],Class['ruby::dev']],
   }
 }

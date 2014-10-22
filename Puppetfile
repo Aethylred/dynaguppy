@@ -28,5 +28,6 @@ mod 'puppetlabs-apache',
 
 # Aethylred's modules
 mod 'Aethylred-puppet', '1.2.3'
+mod 'Aethylred-puppetdashboard', '1.0.4'
 mod 'Aethylred-git', '0.2.0'
 mod 'Aethylred-gitlab', '0.4.1'
