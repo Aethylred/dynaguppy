@@ -9,3 +9,5 @@ stage { 'prep_repos':
 }
 
 $puppet_master_host = 'puppet.local'
+$puppetdb_host      = 'puppet.local'
+$gitlab_host        = 'git.local'

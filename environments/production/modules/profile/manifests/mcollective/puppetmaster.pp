@@ -2,6 +2,6 @@
 class profile::mcollective::puppetmaster {
   class { '::mcollective':
     middleware        => true,
-    middleware_hosts  => ['puppet.local'],
+    middleware_hosts  => [$::puppet_master_host],
   }
 }

@@ -54,10 +54,11 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
     $ gem install librarian-puppet
     ```
 
-1. Bootstrap the Puppet modules managed with librarian-puppet (**NOTE:** Dynaguppy has librarian-puppet install modules into `/etc/puppet/library`):
+1. Bootstrap the Puppet modules managed with librarian-puppet (**NOTE:** Dynaguppy has librarian-puppet install modules into `/etc/puppet/environments/production/library`):
 
     ```
-    $ librarian-puppet install
+    $ cd /etc/puppet/environments/production
+    $ librarian-puppet install --clean --verbose
     ```
 
 1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname. Verify that this name matches the output from `facter fqdn`
@@ -70,7 +71,7 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
 1. Use puppet to bootstrap the puppetmaster service:
 
     ```
-    $ puppet apply -t /etc/puppet/manifests
+    $ puppet apply -t /etc/puppet/environments/production/manifests
     ```
 
 1. ???

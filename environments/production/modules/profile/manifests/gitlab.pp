@@ -7,7 +7,7 @@ class profile::gitlab {
   }
 
   class{'::gitlab':
-    gitlab_url  => "http://${::fqdn}/",
+    gitlab_url  => "http://${::gitlab_host}/",
     require     => [
       Package[
         $dep_packages

@@ -1,0 +1,8 @@
+*~
+Puppetfile.lock
+.librarian/*
+!.librarian/puppet/
+.tmp/
+library/*
+hieradata/
+*.dpkg-dist
