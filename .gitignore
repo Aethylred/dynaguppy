@@ -42,5 +42,6 @@ etckeeper-commit*
 auth.conf
 fileserver.conf
 puppetdb.conf
+autosign.conf
 routes.yaml
 environments/*/library

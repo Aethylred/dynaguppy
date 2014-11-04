@@ -1,11 +1,6 @@
 # Installs the puppet dashboard applicaiton
 class profile::puppetdashboard {
   $dep_packages =[
-    'libpq-dev',
-    'libsqlite3-dev',
-    'libxml2-dev',
-    'libxslt1-dev',
-    'libstdc++6',
     'openssl'
   ]
 

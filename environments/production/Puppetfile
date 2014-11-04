@@ -18,16 +18,12 @@ mod 'puppetlabs-puppetdb', '4.0.0'
 mod 'puppetlabs-postgresql', '4.0.0'
 
 # Require updated versions
-mod 'puppetlabs-mysql',
-  :git => 'https://github.com/puppetlabs/puppetlabs-mysql.git',
-  :ref => 'origin/master'
-
 mod 'puppetlabs-apache',
   :git => 'https://github.com/puppetlabs/puppetlabs-apache.git',
   :ref => 'origin/master'
 
 # Aethylred's modules
-mod 'Aethylred-puppet', '1.4.0'
-mod 'Aethylred-puppetdashboard', '1.0.4'
+mod 'Aethylred-puppet', '1.4.1'
+mod 'Aethylred-puppetdashboard', '1.0.6'
 mod 'Aethylred-git', '0.2.0'
 mod 'Aethylred-gitlab', '0.4.1'

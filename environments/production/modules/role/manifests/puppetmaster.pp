@@ -15,7 +15,6 @@ class role::puppetmaster {
   ]
 
   Class[
-    'profile::mysql::puppetdashboard',
     'profile::postgresql::puppetmaster',
     'nodejs',
     'profile::git'
@@ -39,7 +38,6 @@ class role::puppetmaster {
   include profile::puppetdb
 
   # These profiles are specific to running the Puppet Dashboard
-  include profile::mysql::puppetdashboard
   include nodejs
   include profile::puppetdashboard
 

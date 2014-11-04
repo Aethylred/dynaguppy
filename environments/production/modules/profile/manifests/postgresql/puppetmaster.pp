@@ -4,4 +4,7 @@ class profile::postgresql::puppetmaster {
     ip_mask_allow_all_users => '0.0.0.0/0',
     listen_addresses        => $::puppet_master_host,
   }
+  class {'postgresql::lib::devel':
+    link_pg_config => false,
+  }
 }
