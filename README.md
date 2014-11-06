@@ -19,6 +19,7 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
 1. Update all packages (restart if required):
 
     ```shell
+    $ apt-get update
     $ apt-get dist-upgrade
     ```
 
@@ -48,9 +49,16 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
     ./bootstrap/ubuntu.sh
     ```
 
+1. If the bootstrap script failed install puppet manually (do not overwrite any files) version 3.6 or later is required:
+
+    ```
+    apt-get install puppet
+    ```
+
 1. Install librarian-puppet:
 
     ```
+    $ apt-get install ruby-dev pkg-config libxml2-dev libxslt1-dev ruby-bundler
     $ gem install librarian-puppet
     ```
 
@@ -66,12 +74,18 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
 
     ```
     $ puppet master --no-daemonize
-    ```
+    ```cd /
 
-1. Use puppet to bootstrap the puppetmaster service:
+1. Use puppet to bootstrap the puppetmaster service (this will take a while):
 
     ```
     $ puppet apply -t /etc/puppet/environments/production/manifests
+    ```
+
+1. Verify the puppetmaster is running and responds to requests (there may be changes):
+
+    ```
+    $ puppet agent -t
     ```
 
 1. ???

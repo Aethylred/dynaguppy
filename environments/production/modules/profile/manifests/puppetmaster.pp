@@ -50,7 +50,7 @@ class profile::puppetmaster{
   }
 
   puppet::fileserver{'private':
-    path        => '/private/%H',
+    path        => '/puppet/private/%H',
     description => 'a private file share containing node specific files',
     require     => File['/puppet/private'],
   }
@@ -67,7 +67,7 @@ class profile::puppetmaster{
   }
 
   puppet::fileserver{'public':
-    path        => '/public',
+    path        => '/puppet/public',
     description => 'a public file share containing node specific files',
     require     => File['/puppet/public'],
   }
