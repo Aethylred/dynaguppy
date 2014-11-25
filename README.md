@@ -12,7 +12,9 @@ There is a [testing harness set up for dynaguppy](https://github.com/Aethylred/d
 
 # Installation
 
-Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up as a Puppet Master, other distributions should work, but have not yet been tested.
+## Bootstrapping the Puppet Master
+
+Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up as a Puppet Master, other distributions should work, but have not yet been tested.
 
 1. Start with a fresh server install with network and hostname configured, and login as root.
 1. Make sure that the hostname and fully qualified domain name are configured correctly.
@@ -74,9 +76,23 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
 
     ```
     $ puppet master --no-daemonize
-    ```cd /
+    ```
 
 1. Use puppet to bootstrap the puppetmaster service (this will take a while):
+
+    ```
+    $ puppet apply -t /etc/puppet/environments/production/manifests
+    ```
+
+1. Stop the puppet services and install the certificates for puppetdb:
+
+    ```
+    $ service apache2 stop
+    $ service puppetb stop
+    $ puppetdb ssl-setup -f
+    ```
+
+1. Use puppet reassert services and fix file ownership and permissions:
 
     ```
     $ puppet apply -t /etc/puppet/environments/production/manifests
@@ -88,8 +104,30 @@ Dynaguppy was developed to install on an Ubuntu 12.04 LTS server and set it up a
     $ puppet agent -t
     ```
 
-1. ???
-1. Profit
+1. Use a browser to navigate to the puppetmaster server's web site and check that the puppet dashboard is running.
+
+This section is complete and should result in the installation and configuration of a Puppet Master with a running Dashboard (on port 80) so that both services can access PuppetDB (web interface on port 8080), and that all these services are backed by an internal PostgreSQL database.
+
+## Bootstrapping the Gitlab server
+
+Dynaguppy was developed to install Gitlab on an Ubuntu 14.04 LTS server, other distributions should work, but have not yet been tested.
+
+1. Start with a fresh server install with network and hostname configured, and login as root.
+1. Make sure that the hostname and fully qualified domain name are configured correctly.
+1. Install puppet:
+
+    ```
+    apt-get install puppet
+    ```
+
+1. The default domain `*.local` is set to autosign on the puppet server, if the Gitlab server's fqdn does not match this pattern then either the autosign configuration needs to be updated, or the Gitlab server needs to request and retrieve a certificate from the Puppet Master.
+1. Provided that the correct `fqdn` for the Gitlab server has been set in the `/etc/puppet/environments/production/manifests/site.pp` the bootstrap installation should run with the puppet agent:
+
+    ```
+    $ puppet agent -t
+    ```
+
+The Gitlab server should be up and running on HTTPS as the default web site.
 
 # Role and Profile
 
