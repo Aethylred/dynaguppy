@@ -1,0 +1,76 @@
+#!/usr/bin/python -u
+# vim: set fileencoding=utf-8 :
+#
+# (C) 2011 Guido Guenther <agx@sigxcpu.org>
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import puppethooks.git as git
+import puppethooks.checkers as checkers
+
+debug = True
+
+def main(argv):
+    tmpdir = None
+    ret = 0
+    zero = '0000000000000000000000000000000000000000'
+
+    try:
+        os.environ['GIT_DIR']
+    except KeyError:
+        print >>sys.stderr, "Don't run this script from the command line."
+        sys.exit(1)
+
+    refname, oldrev, newrev = sys.argv[1:4]
+    if zero in [oldrev, newrev]:
+        return 0
+
+    print "Checking files syntax."
+    try:
+        tmpdir = tempfile.mkdtemp()
+
+        for old_mode, new_mode, old_sha, new_sha, status, name in git.diff_tree(oldrev, newrev):
+            if new_sha == zero:
+                continue
+
+            try:
+                extension = name.rsplit('.',1)[-1]
+            except IndexError:
+                continue
+
+            try:
+                if debug:
+                    print "Checking %s" % name
+                git.do_check(name, tmpdir, new_sha)
+            except KeyError:
+                continue
+            except checkers.CheckFailed:
+                print >>sys.stderr, "Syntax check of '%s' failed" % name
+                ret = 1
+    finally:
+        if tmpdir:
+            shutil.rmtree(tmpdir)
+
+    print "Checking files syntax done. %s" % ["", "Will deny commit due to errors."][ret]
+    return ret
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv))
+
+# vim:et:ts=4:sw=4:et:sts=4:ai:set list listchars=tab\:»·,trail\:·:
