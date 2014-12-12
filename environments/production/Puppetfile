@@ -16,13 +16,14 @@ mod 'puppetlabs-mcollective', '2.0.0'
 mod 'puppetlabs-puppetdb', '4.1.0'
 mod 'puppetlabs-postgresql', '4.1.0'
 
-mod 'camptocamp-augeas', '0.3.2'
-mod 'stankevich-python', '1.7.16'
+mod 'camptocamp-augeas', '1.1.0'
+mod 'stankevich-python', '1.8.2'
 
 # Require updated versions
 
 # Aethylred's modules
-mod 'Aethylred-puppet', '1.4.1'
+mod 'Aethylred-puppet', '1.4.2'
 mod 'Aethylred-puppetdashboard', '1.0.7'
 mod 'Aethylred-git', '0.3.1'
 mod 'Aethylred-gitlab', '0.5.4'
+mod 'Aethylred-keymaster', '0.1.5'

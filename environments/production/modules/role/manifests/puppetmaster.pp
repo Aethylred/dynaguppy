@@ -41,4 +41,9 @@ class role::puppetmaster {
   include nodejs
   include profile::puppetdashboard
 
+  # Only run this from a Puppetmaster
+  if $::trusted and $::trusted['authenticated'] == 'remote' {
+    include keymaster
+  }
+
 }

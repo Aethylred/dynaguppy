@@ -6,4 +6,5 @@ node 'git.local' {
 
 # The following statements set up the dynamic environments managed via git branching
   include dynaguppy::gitlab
+  include dynaguppy::share_keys
 }

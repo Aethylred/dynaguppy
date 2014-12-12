@@ -71,6 +71,12 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
     $ librarian-puppet install --clean --verbose
     ```
 
+1. If librarian-puppet install fails, try using an update instead:
+
+    ```
+    $ librarian-puppet update --verbose
+    ```
+
 1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname. Verify that this name matches the output from `facter fqdn`
 1. Initialise the Puppetmaster SSL environment (*NOTE:* run the command and exit with `^C` after a minute or two to allow SSL certificates to generate):
 
@@ -127,6 +133,8 @@ Dynaguppy was developed to install Gitlab on an Ubuntu 14.04 LTS server, other d
     $ puppet agent -t
     ```
 
+There are a number of tasks in the Gitlab server's manifest that can time out or not run reliably on poor network connections. They will often resolve over a number of puppet run.
+
 The Gitlab server should be up and running on HTTPS as the default web site.
 
 # Role and Profile
@@ -134,6 +142,22 @@ The Gitlab server should be up and running on HTTPS as the default web site.
 As Dynaguppy uses `librarian-puppet` to manage modules, most of the module subdirectories are ignored by Git, the exceptions are the `role` and the `profile` subdirectories.
 
 The use of roles and profiles in Dynaguppy is based on the [presentation and examples](https://github.com/hunner/roles_and_profiles) by [Hunter Haugen](https://github.com/hunner) at [PuppetConf 2013](http://puppetconf.com/), which is in turn was based on a [similar presentation](http://www.slideshare.net/PuppetLabs/roles-talk) given by Craig Dunn at [Puppet Camp Stockholm 2013](http://puppetlabs.com/community/puppet-camp#previous).
+
+# Git Hook Scripts
+
+The git hook scripts used in Dynaguppy are maintained on their own [githb repository](https://github.com/Aethylred/puppet-helpers) and are derived from these [puppet helper hook scripts](https://gitorious.org/puppet-helpers/puppet-helpers). These hook scripts have two parts.
+
+## `update`
+
+The `update` hook scripts process pushes to the Puppet manifest repository set up on the Gitlab server. The script rejects commits if:
+
+* puppet files (`*.pp`) in the commit fails Puppet syntax validation
+* Ruby files (`*.rb`) in the commit fails Ruby syntax validation
+* ERB templates (`*.erb`) in the commit fails Ruby syntax validation
+
+## `post-receive`
+
+The `post-receive` script has the git user SSH on the Gitlab server SSH to the puppetmaster and update, create, or delete puppet environment directories that match the git branch that was pushed to the repository. Dynaguppy is sets these user accounts up so they have the appropriate SSH access to each other. The master branch is mapped to the production environment, so the production branch is reserved and is not pushed to the puppetmaster.
 
 # Upgrading Ruby
 

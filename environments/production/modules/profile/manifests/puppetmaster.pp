@@ -11,6 +11,7 @@ class profile::puppetmaster{
     default_manifest     => '$confdir/manifests',
     autosign             => '/etc/puppet/autosign.conf',
     autosign_conf_path   => '/etc/puppet/autosign.conf',
+    trusted_node_data    => true,
     require              => [
       Class[
         'apache::mod::passenger',

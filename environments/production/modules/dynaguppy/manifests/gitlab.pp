@@ -37,5 +37,4 @@ class dynaguppy::gitlab {
     target => 'puppet_manifest',
     source => 'puppet:///modules/dynaguppy/puppethooks/git.py',
   }
-
 }

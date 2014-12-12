@@ -3,4 +3,5 @@
 node 'puppet.local' {
   include defaults
   include role::puppetmaster
+  include dynaguppy::share_keys
 }
