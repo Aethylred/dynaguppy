@@ -18,6 +18,7 @@ mod 'puppetlabs-postgresql', '4.1.0'
 
 mod 'camptocamp-augeas', '1.1.0'
 mod 'stankevich-python', '1.8.2'
+mod 'saz-ssh', '2.4.0'
 
 # Require updated versions
 

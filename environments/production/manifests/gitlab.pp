@@ -2,6 +2,7 @@
 node 'git.local' {
   include defaults
   include defaults::python
+  include defaults::ssh
   include role::gitlab
 
 # The following statements set up the dynamic environments managed via git branching
