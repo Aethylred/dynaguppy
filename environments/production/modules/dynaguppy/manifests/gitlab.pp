@@ -7,6 +7,9 @@ class dynaguppy::gitlab {
     project => 'puppet',
   }
 
+  $repository_uri = "https://${::gitlab_host}/puppet/puppet.git"
+  $puppetmaster_ssh_uri = "puppet@${::puppet_master_host}"
+
   gitlab::shell::repo::hook{'puppet_check_update':
     path   => 'update',
     target => 'puppet_manifest',
@@ -36,5 +39,12 @@ class dynaguppy::gitlab {
     path   => 'puppethooks/git.py',
     target => 'puppet_manifest',
     source => 'puppet:///modules/dynaguppy/puppethooks/git.py',
+  }
+
+  # This hook script pushes updates to the puppetmaster
+  gitlab::shell::repo::hook{'post_receive_puppetmaster_push':
+    path    => 'post_recieve',
+    target  => 'puppet_manifest',
+    content => template('dynaguppy/post_receive.erb'),
   }
 }

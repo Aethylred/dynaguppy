@@ -1,0 +1,61 @@
+#!/bin/sh
+# This script will push a puppet manifest stored on a git repository to
+# a puppet master. This requires that the git user on the git repository
+# (i.e. git@git.example.org) can do passwordless login as the puppet user
+# on the puppet master (i.e. as puppet@puppet.example.org)
+# Once logged in as puppet on the puppetmaster this script will create, update,
+# or delete the environment directory. This includes updating any git submodules
+# and running librarian puppet if a Puppetfile exists in the environment
+# directory after the git update/clone.
+read oldrev newrev refname
+
+# CHANGE THESE! They need to match your environment.
+# Read URLs are recommended as they don't require authentication
+REPO="<%= @repository_uri %>"
+BRANCH=`echo $refname | sed -n 's/^refs\/heads\///p'`
+PUPPET_ENV_DIR="/etc/puppet/environments"
+SSH_DEST="<%= @puppetmaster_ssh_uri %>"
+
+# Mapping the master branch to the production environment
+if [ "$BRANCH" = "master" ]
+then
+  echo "$BRANCH is master, remapping"
+  BRANCH_REAL="production"
+elif [ "$BRANCH" = "production" ]
+  echo "FATAL: production environment is reserved for the master branch and will not be pushed to the puppetmaster"
+  exit 1
+else
+  #Otherwise its a non-master/production branch and the env can be created
+  #w/ the branch name
+  BRANCH_REAL="$BRANCH"
+fi
+
+echo "Pushing $BRANCH as $BRANCH_REAL to $SSH_DEST"
+  
+if [ "$newrev" -eq 0 ] 2> /dev/null
+then
+  # branch is being deleted
+  echo "Deleting remote branch $PUPPET_ENV_DIR/$BRANCH_REAL"
+  ssh $SSH_DEST /bin/sh <<-EOF
+cd $PUPPET_ENV_DIR && rm -rf $BRANCH_REAL
+EOF
+else
+  # branch is being updated
+  echo "Updating remote branch $PUPPET_ENV_DIR/$BRANCH_REAL"
+  ssh $SSH_DEST /bin/sh <<-EOF
+{ cd $PUPPET_ENV_DIR/$BRANCH_REAL \
+&& git reset --hard HEAD~2 \
+&& git pull origin $BRANCH \
+&& git submodule sync \
+&& git submodule update --init --recursive\
+&& { -f Puppetfile && librarian-puppet update ; } \
+|| echo 'No Puppetfile, skipping librarian-puppet' ; } \
+|| { mkdir -p $PUPPET_ENV_DIR \
+&& git clone -b $BRANCH $REPO $BRANCH_REAL --recursive \
+&& cd $BRANCH_REAL \
+&& { -f Puppetfile && librarian-puppet install --clean ; }
+|| echo 'No Puppetfile, skipping librarian-puppet' ; }
+EOF
+fi
+
+exit $?
