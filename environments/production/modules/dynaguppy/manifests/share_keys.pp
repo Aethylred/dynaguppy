@@ -11,7 +11,6 @@ class dynaguppy::share_keys {
         }
         keymaster::openssh::deploy_pair{'puppet@puppetmaster':
           user    => 'puppet',
-          require => Keymaster::Openssh::Key::Generate['puppet@puppetmaster']
         }
       }
     }

@@ -22,7 +22,7 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
 
     ```shell
     $ apt-get update
-    $ apt-get dist-upgrade
+    $ apt-get upgrade
     ```
 
 1. Install git:
@@ -57,11 +57,12 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
     apt-get install puppet
     ```
 
-1. Install librarian-puppet:
+1. Install librarian-puppet and update Ruby gems:
 
     ```
     $ apt-get install ruby-dev pkg-config libxml2-dev libxslt1-dev ruby-bundler
     $ gem install librarian-puppet
+    $ gem update
     ```
 
 1. Bootstrap the Puppet modules managed with librarian-puppet (**NOTE:** Dynaguppy has librarian-puppet install modules into `/etc/puppet/environments/production/library`):
