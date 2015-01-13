@@ -7,7 +7,7 @@ class profile::gitlab {
   }
 
   class{'::gitlab':
-    gitlab_url        => "http://${::gitlab_host}/",
+    gitlab_url        => "https://${::gitlab_host}/",
     enable_https      => true,
     redirect_http     => true,
     gitlab_app_repo   => 'https://github.com/gitlabhq/gitlabhq.git',

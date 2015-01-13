@@ -7,4 +7,8 @@ class profile::git {
   class { '::git':
     ensure => 'latest',
   }
+  git::config{'push.default':
+    provider => 'system',
+    value    => 'matching'
+  }
 }
