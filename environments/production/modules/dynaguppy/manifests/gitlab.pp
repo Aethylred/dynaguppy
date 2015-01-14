@@ -7,7 +7,7 @@ class dynaguppy::gitlab {
     project => 'puppet',
   }
 
-  $repository_uri = "https://${::gitlab_host}/puppet/puppet.git"
+  $repository_uri = "git@${::gitlab_host}:puppet/puppet.git"
   $puppetmaster_ssh_uri = "puppet@${::puppet_master_host}"
 
   gitlab::shell::repo::hook{'puppet_check_update':
