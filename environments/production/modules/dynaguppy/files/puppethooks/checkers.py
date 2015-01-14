@@ -16,8 +16,11 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import subprocess
+import os
 
 puppet_version = None
+my_env = os.environ.copy()
+my_env['HOME'] = '/home/git'
 
 class CheckFailed(Exception):
     def __init__(self, error, path, details=None):
@@ -27,7 +30,9 @@ def get_puppet_version():
     global puppet_version
 
     popen = subprocess.Popen(["puppet", "--version"],
-                              stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+                              stderr=subprocess.PIPE,
+                              stdout=subprocess.PIPE,
+                              env=my_env)
     output = popen.communicate()
     if popen.returncode:
         puppet_version = 0
@@ -36,6 +41,7 @@ def get_puppet_version():
         puppet_version = int(ma) * 1000 + int(mi) * 100 + int(rel)
 
 def puppet_checker(path):
+    print "Checking Puppet syntax"
     """Check syntax of puppet manifests"""
     if puppet_version == None:
         get_puppet_version()
@@ -47,7 +53,10 @@ def puppet_checker(path):
         cmd = ['puppet', '--color=false', '--noop', '--vardir=/tmp',
                '--confdir=/tmp', '--parseonly', path]
 
-    popen = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    popen = subprocess.Popen(cmd,
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             env=my_env)
     output = popen.communicate()
     if popen.returncode:
         # Using '--ignoreimport is broken as of puppet 2.6.X:
@@ -59,6 +68,7 @@ def puppet_checker(path):
 
 
 def ruby_checker(path):
+    print "Checking Ruby syntax"
     """Simple ruby syntax checker"""
     cmd = ['ruby', '-c', path]
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -68,6 +78,7 @@ def ruby_checker(path):
 
 
 def template_checker(path):
+    print "Checking .erb Template syntax"
     """Check syntax of erb templates"""
     cmd_str = "erb -P -x -T '-' %s | ruby -c "
     cmd = [ cmd_str % path]
@@ -86,9 +97,11 @@ def check(path):
     try:
         extension = path.rsplit('.',1)[-1]
     except IndexError:
+        print "Ignoring files without extensions"
         pass # ignore files without extension
 
     try:
         _file_checkers[extension](path)
     except KeyError:
+        print "Ignoring files with extensions without checks"
         pass # ignore unknown extensions
