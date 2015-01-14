@@ -16,6 +16,7 @@ class dynaguppy::gitlab {
     source => 'puppet:///modules/dynaguppy/update',
   }
 
+  $git_home = '/home/git'
   $puppethook_dir = "/home/git/repositories/puppet/puppet.git/custom_hooks/puppethooks"
 
   file{'puppethooks_dir':
@@ -32,7 +33,7 @@ class dynaguppy::gitlab {
   gitlab::shell::repo::hook{'puppet_check_checkers.py':
     path   => 'puppethooks/checkers.py',
     target => 'puppet_manifest',
-    source => 'puppet:///modules/dynaguppy/puppethooks/checkers.py',
+    content => template('dynaguppy/checkers.py.erb'),
   }
 
   gitlab::shell::repo::hook{'puppet_check_git.py':
@@ -43,8 +44,8 @@ class dynaguppy::gitlab {
 
   # This hook script pushes updates to the puppetmaster
   gitlab::shell::repo::hook{'post_receive_puppetmaster_push':
-    path    => 'post_recieve',
+    path    => 'post-receive',
     target  => 'puppet_manifest',
-    content => template('dynaguppy/post_receive.erb'),
+    content => template('dynaguppy/post-receive.erb'),
   }
 }

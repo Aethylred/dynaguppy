@@ -20,7 +20,7 @@ import os
 
 puppet_version = None
 my_env = os.environ.copy()
-my_env['HOME'] = '/home/git'
+my_env['HOME'] = '<%= @git_home %>'
 
 class CheckFailed(Exception):
     def __init__(self, error, path, details=None):

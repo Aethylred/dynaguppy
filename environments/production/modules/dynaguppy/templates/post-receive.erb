@@ -19,9 +19,10 @@ SSH_DEST="<%= @puppetmaster_ssh_uri %>"
 # Mapping the master branch to the production environment
 if [ "$BRANCH" = "master" ]
 then
-  echo "$BRANCH is master, remapping"
+  echo "Branch is master, mapping to production"
   BRANCH_REAL="production"
 elif [ "$BRANCH" = "production" ]
+then
   echo "FATAL: production environment is reserved for the master branch and will not be pushed to the puppetmaster"
   exit 1
 else
@@ -41,21 +42,22 @@ cd $PUPPET_ENV_DIR && rm -rf $BRANCH_REAL
 EOF
 else
   # branch is being updated
-  echo "Updating remote branch $PUPPET_ENV_DIR/$BRANCH_REAL"
-  ssh $SSH_DEST /bin/sh <<-EOF
+  echo "Updating remote branch $PUPPET_ENV_DIR/$BRANCH_REAL on $SSH_DEST"
+  ssh $SSH_DEST /bin/sh <<EOF
 { cd $PUPPET_ENV_DIR/$BRANCH_REAL \
-&& git reset --hard HEAD~2 \
+&& git reset --hard \
 && git pull origin $BRANCH \
 && git submodule sync \
-&& git submodule update --init --recursive\
-&& { -f Puppetfile && librarian-puppet update ; } \
-|| echo 'No Puppetfile, skipping librarian-puppet' ; } \
-|| { mkdir -p $PUPPET_ENV_DIR \
-&& git clone -b $BRANCH $REPO $BRANCH_REAL --recursive \
-&& cd $BRANCH_REAL \
-&& { -f Puppetfile && librarian-puppet install --clean ; }
-|| echo 'No Puppetfile, skipping librarian-puppet' ; }
+&& git submodule update --init --recursive ; }\
+|| { cd $PUPPET_ENV_DIR \
+&& git clone -b $BRANCH $REPO $BRANCH_REAL --recursive ; }
+echo 'Checking Puppetfile'
+cd $PUPPET_ENV_DIR/$BRANCH_REAL
+{ git show --pretty --no-color --name-only | grep Puppetfile ; } \
+&& echo 'Puppetfile changed' \
+|| echo 'Puppetfile unchanged, skipping librarian-puppet'
 EOF
+  echo "Update completed."
 fi
 
 exit $?
