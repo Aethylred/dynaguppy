@@ -12,4 +12,5 @@ node 'puppet.local' {
   include defaults::ssh
   include role::puppetmaster
   include dynaguppy::share_keys
+  include dynaguppy::puppetmaster
 }

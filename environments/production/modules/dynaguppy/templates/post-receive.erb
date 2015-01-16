@@ -16,6 +16,8 @@ BRANCH=`echo $refname | sed -n 's/^refs\/heads\///p'`
 PUPPET_ENV_DIR="/etc/puppet/environments"
 SSH_DEST="<%= @puppetmaster_ssh_uri %>"
 
+echo 'Running post-receive hook to push changes to Puppetmaster'
+
 # Mapping the master branch to the production environment
 if [ "$BRANCH" = "master" ]
 then
@@ -53,9 +55,8 @@ else
 && git clone -b $BRANCH $REPO $BRANCH_REAL --recursive ; }
 echo 'Checking Puppetfile'
 cd $PUPPET_ENV_DIR/$BRANCH_REAL
-{ git show --pretty --no-color --name-only | grep Puppetfile ; } \
-&& echo 'Puppetfile changed' \
-|| echo 'Puppetfile unchanged, skipping librarian-puppet'
+/usr/local/dynaguppy/bin/librarian-puppet-helper.sh /
+|| echo 'WARNING: librarian-puppet helper script failed!'
 EOF
   echo "Update completed."
 fi
