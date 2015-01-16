@@ -138,6 +138,78 @@ There are a number of tasks in the Gitlab server's manifest that can time out or
 
 The Gitlab server should be up and running on HTTPS as the default web site.
 
+## Git push to Puppetmaster configuration
+
+The puppet manifests will have primed the puppetmaster and the gitlab site for integration, but a number of manual steps are required to complete this.
+
+1. Locate the public ssh key for the `puppet` user on the puppetmaster, if the dynaguppy configuration has not changed it should be in `/var/lib/puppet/.ssh/id_rsa.pub`. The contents of this file will need to be copied and pasted in later steps.
+1. Log into the Gitlab web application as the administrator user (the default is the `root` user with the password `5iveL!fe`), it will be necessary to change this default password before continuing.
+1. Got to the Gitlab admin area
+1. Click on the **New User** icon and create a new user named `puppetmaster`. Add whatever details are required.
+1. Once the `puppetmaster` user has been created return to the admin area.
+1. Select the `puppetmaster` user from the list of users.
+1. Click on the **Edit** icon and use the administrator tools to set the `puppetmaster`user's password. Keep a record of this new password.
+1. Go to the Gitlab admin area and select the `puppet/puppet` project.
+1. Click the edit icon on the group members panel.
+1. Add the sit `Administrator` and the `puppetmaster` user.
+1. Set both users as **owner** of the `puppet/puppet` project.
+1. Log out of the Gitlab application.
+1. Log into the Gitlab application as the `puppetmaster` user, use the password set previously.
+1. Go to the `puppetmaster` user's profile settings and add the puppetmaster's public key as a ssh key. This should allow the puppet user to push to and pull from the `puppet/puppet` project.
+1. Check the Gitlab application dashboard, it should list the `puppet/puppet` project in the **Project** tab, click on it.
+1. Take note of the ssh URI for the `puppet/puppet` project. It should be similar to `git@git.local:puppet/puppet.git` (this URI will be used as an example in these instructions, substitute it for the correct one)
+1. Log into the puppetmaster server as root
+1. Clear the librarian-puppet cache with:
+
+    ```
+    # rm -rf /tmp/puppet-librarian
+    ```
+
+1. Change to the puppet user:
+
+    ```
+    # su -l puppet
+    ```
+
+1. Change to the `production` environment directory:
+
+    ```
+    # cd /etc/puppet/environments/production
+    ```
+
+1. Check that all the contents belong to the puppet user and group.
+1. Initialise with git, add all files and commit:
+
+    ```
+    # git init
+    # git add -A
+    # git commit -m 'Initial commit'
+    ```
+
+1. Verify access to Gitlab with ssh, it should respond with `Welcome to GitLab, Puppet Master!` and not `Welcome to GitLab, Anonymous!`:
+
+    ```
+    # ssh git@git.local
+    ```
+
+1. Add the Gitlab repository as a remote:
+
+    ```
+    # git remote add origin git@git.local:puppet/puppet.git
+    ```
+
+1. Push to the repository
+
+    ```
+    # git push origin master
+    ```
+
+Dynaguppy should now have the puppetmaster directory environments syncronised with the puppet repository and it's branches on the Gitlab application.
+
+It should now be safe to reduce the Puppetmaster Gitlab user's permissions to **Reporter**. It is also recommended that another user other than the Administrator is made **Owner** of the `puppet/puppet` project.
+
+**Note**: Git pushes to the `puppet/puppet` project may take some time, especially when changes have been made to the `Puppetfile` and trigger a librarian-puppet run.
+
 # Role and Profile
 
 As Dynaguppy uses `librarian-puppet` to manage modules, most of the module subdirectories are ignored by Git, the exceptions are the `role` and the `profile` subdirectories.
@@ -158,7 +230,7 @@ The `update` hook scripts process pushes to the Puppet manifest repository set u
 
 ## `post-receive`
 
-The `post-receive` script has the git user SSH on the Gitlab server SSH to the puppetmaster and update, create, or delete puppet environment directories that match the git branch that was pushed to the repository. Dynaguppy is sets these user accounts up so they have the appropriate SSH access to each other. The master branch is mapped to the production environment, so the production branch is reserved and is not pushed to the puppetmaster.
+The `post-receive` script has the git user SSH on the Gitlab server SSH to the puppetmaster and update, create, or delete puppet environment directories that match the git branch that was pushed to the repository. Dynaguppy is sets these user accounts up so they have the appropriate SSH access to each other. The master branch is mapped to the production environment, so the production branch is reserved and is not pushed to the puppetmaster. A sub-script `/usr/local/dynaguppy/bin/librarian-puppet-helper.sh` is created that is used to ensure librarian-puppet runs.
 
 # Upgrading Ruby
 
@@ -196,10 +268,4 @@ This Puppet configration is derived from the [Dynaguppy](dynaguppy) project writ
 
 This file is part of the dynaguppy project.
 
-The dynaguppy is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-A copy of the GNU General Public License is included with dynaguppy in the `gpl.txt` file.  If not, see <http://www.gnu.org/licenses/>.
-
-<a rel="license" href="http://www.gnu.org/licenses/"><img alt="Gnu General Public Licence 3" style="border-width:0" src="http://www.gnu.org/graphics/gplv3-88x31.png" /></a>
+Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
