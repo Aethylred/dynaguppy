@@ -47,8 +47,8 @@ else
   echo "Updating remote branch $PUPPET_ENV_DIR/$BRANCH_REAL on $SSH_DEST"
   ssh $SSH_DEST /bin/sh <<EOF
 { cd $PUPPET_ENV_DIR/$BRANCH_REAL \
-&& git reset --hard \
-&& git pull origin $BRANCH \
+&& git fetch origin $BRANCH \
+&& git reset --hard origin/$BRANCH \
 && git submodule sync \
 && git submodule update --init --recursive ; }\
 || { cd $PUPPET_ENV_DIR \

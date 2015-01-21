@@ -45,7 +45,7 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
     cd /etc/puppet
     ```
 
-1. Bootstrap the puppet repositories and installation (**Note:** use the bootstrap script appropriate for your OS):
+1. Bootstrap the puppet repositories and installation (use the bootstrap script appropriate for your OS, and set execute permission if required):
 
     ```
     ./bootstrap/ubuntu.sh
@@ -79,6 +79,9 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
     ```
 
 1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/puppetmaster.pp` to match the Puppet Master's hostname. Verify that this name matches the output from `facter fqdn`
+1. Edit the node manifest `/etc/puppet/manifests/dynaguppy/git.pp` to match the Gitlab Server's hostname. Verify that this name matches the output from `facter fqdn`
+1. Edit the node manifest `/etc/puppet/manifests/site.pp` to match the Puppet Master and Gitlab server hostnames. Verify that this name matches the output from `facter fqdn`
+1. Other files in the manifest may require changes. For example `/etc/puppet/environments/production/modules/profile/manifests/puppetmaster.ppp` may require the `puppet::autosign` domain changed. Please review the manifest.
 1. Initialise the Puppetmaster SSL environment (*NOTE:* run the command and exit with `^C` after a minute or two to allow SSL certificates to generate):
 
     ```
@@ -99,10 +102,17 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
     $ puppetdb ssl-setup -f
     ```
 
-1. Use puppet reassert services and fix file ownership and permissions:
+1. Use puppet to restart the stopped services and fix file ownership and permissions:
 
     ```
     $ puppet apply -t /etc/puppet/environments/production/manifests
+    ```
+
+1. Make sure the Apache service is running:
+
+    ```
+    $ service apache2 status
+    $ service apache2 start
     ```
 
 1. Verify the puppetmaster is running and responds to requests (there may be changes):
@@ -111,6 +121,7 @@ Dynaguppy was developed to install on an Ubuntu 14.04 LTS server and set it up a
     $ puppet agent -t
     ```
 
+1. Some of the install components are sensitive to timing out or network issues. It may take a couple of puppet agent runs to finish the install.
 1. Use a browser to navigate to the puppetmaster server's web site and check that the puppet dashboard is running.
 
 This section is complete and should result in the installation and configuration of a Puppet Master with a running Dashboard (on port 80) so that both services can access PuppetDB (web interface on port 8080), and that all these services are backed by an internal PostgreSQL database.
@@ -127,14 +138,21 @@ Dynaguppy was developed to install Gitlab on an Ubuntu 14.04 LTS server, other d
     apt-get install puppet
     ```
 
+1. Edit `/etc/puppet/puppet.conf` and set the puppetmaster server to the puppet master. There should be the following block in the file:
+
+    ```
+    server=puppet.local
+    ```
+
 1. The default domain `*.local` is set to autosign on the puppet server, if the Gitlab server's fqdn does not match this pattern then either the autosign configuration needs to be updated, or the Gitlab server needs to request and retrieve a certificate from the Puppet Master.
 1. Provided that the correct `fqdn` for the Gitlab server has been set in the `/etc/puppet/environments/production/manifests/site.pp` the bootstrap installation should run with the puppet agent:
 
     ```
+    $ puppet agent --enable
     $ puppet agent -t
     ```
 
-There are a number of tasks in the Gitlab server's manifest that can time out or not run reliably on poor network connections. They will often resolve over a number of puppet run.
+There are a number of tasks in the Gitlab server's manifest that time out or not run reliably on depending on the network connection. They will often resolve over a number of puppet run.
 
 The Gitlab server should be up and running on HTTPS as the default web site.
 
@@ -177,7 +195,7 @@ The puppet manifests will have primed the puppetmaster and the gitlab site for i
     # cd /etc/puppet/environments/production
     ```
 
-1. Check that all the contents belong to the puppet user and group.
+1. Check that all the contents belong to the puppet user.
 1. Initialise with git, add all files and commit:
 
     ```
@@ -201,7 +219,7 @@ The puppet manifests will have primed the puppetmaster and the gitlab site for i
 1. Push to the repository
 
     ```
-    # git push origin master
+    # git push -u origin master
     ```
 
 Dynaguppy should now have the puppetmaster directory environments syncronised with the puppet repository and it's branches on the Gitlab application.
@@ -232,6 +250,23 @@ The `update` hook scripts process pushes to the Puppet manifest repository set u
 
 The `post-receive` script has the git user SSH on the Gitlab server SSH to the puppetmaster and update, create, or delete puppet environment directories that match the git branch that was pushed to the repository. Dynaguppy is sets these user accounts up so they have the appropriate SSH access to each other. The master branch is mapped to the production environment, so the production branch is reserved and is not pushed to the puppetmaster. A sub-script `/usr/local/dynaguppy/bin/librarian-puppet-helper.sh` is created that is used to ensure librarian-puppet runs.
 
+# Troubleshooting
+
+## Trouble with the dashboard certificate on the Puppetmaster
+
+If the first error in your puppet report is:
+
+```
+Error: Could not find certificate request for dashboard
+```
+
+This happens when the Puppet Dashboard tries to set itself up but the puppetmaster isn't listening for certificate requests. If your puppetmaster service is running on apache try:
+
+```
+$ rm /usr/share/puppet-dashboard/certs/dashboard.*.pem
+$ puppet agent -t
+```
+
 # Upgrading Ruby
 
 Dynaguppy runs on Ruby version 1.8.7 as this is compatible across the range of Puppet versions that are available from the Linux distribution package repositories. Once Dynaguppy has bootstrapped Puppet to version 3.x it should be possible to upgrade to Ruby 1.9.3 or 2.x. Be sure to check the [Ruby compatibility guide](http://docs.puppetlabs.com/guides/platforms.html#ruby-versions) in the Puppet documentation
@@ -250,7 +285,7 @@ The Linux distrubutors insist that software and applications are distributed thr
 
 This is correct for a stable and consistent operating system.
 
-This situation has been intractible for this project, hence a neutral position will be taken. Ruby will be used as it is installed as a dependency of Puppet (as a package from the distribution package repository). The Ruby module included with Dynaguppy will only be used to configure the Ruby environment.
+This situation has been intractable for this project, hence a neutral position will be taken. Ruby will be used as it is installed as a dependency of Puppet (as a package from the distribution package repository). The Ruby module included with Dynaguppy will only be used to configure the Ruby environment.
 
 Do not be surprised if this changes through the development of Dynaguppy.
 
