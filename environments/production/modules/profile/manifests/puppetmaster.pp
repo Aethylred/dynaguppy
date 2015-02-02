@@ -81,4 +81,20 @@ class profile::puppetmaster{
   }
 
   puppet::autosign{'*.local': }
+
+  file{'/etc/puppet/hiera':
+    ensure  => 'directory',
+    owner   => 'puppet',
+    group   => 'puppet',
+    ignore  => ['.git'],
+    recurse => true
+  }
+
+  # Once bootstrapped, this can be deleted.
+  class{'::puppet::hiera':
+    hiera_conf_path => '/etc/puppet/hiera/hiera.yaml',
+    hiera_data_dir  => '/etc/puppet/hiera/data',
+    hiera_backend   => 'yaml',
+    hiera_hierarchy => ['%{::clientcert}','%{::environment}','common']
+  }
 }

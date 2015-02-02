@@ -1,0 +1,43 @@
+#!/bin/sh
+# This script will push a puppet manifest stored on a git repository to
+# a puppet master. This requires that the git user on the git repository
+# (i.e. git@git.example.org) can do passwordless login as the puppet user
+# on the puppet master (i.e. as puppet@puppet.example.org)
+# Once logged in as puppet on the puppetmaster this script will create, update,
+# or delete the environment directory. This includes updating any git submodules
+# and running librarian puppet if a Puppetfile exists in the environment
+# directory after the git update/clone.
+read oldrev newrev refname
+
+# CHANGE THESE! They need to match your environment.
+# Read URLs are recommended as they don't require authentication
+REPO="<%= @hiera_repository_uri %>"
+BRANCH=`echo $refname | sed -n 's/^refs\/heads\///p'`
+HIERA_DIR="/etc/puppet/hiera"
+SSH_DEST="<%= @puppetmaster_ssh_uri %>"
+
+echo 'Running post-receive hook to push Hiera changes to Puppetmaster'
+
+# Mapping the master branch to the production environment
+if [ "$BRANCH" = "master" ]
+then
+  echo "INFO: Branch is master, mapping to production"
+elif [ "$BRANCH" = "production" ]
+then
+  echo "FATAL: production environment is reserved for the master branch and will not be pushed to the puppetmaster"
+  exit 1
+else
+  echo "WARNING: Only master branch will be pushed to the Puppetmaster"
+  exit 0
+fi
+
+echo "Pushing Hiera to $SSH_DEST"
+  
+ssh $SSH_DEST /bin/sh <<EOF
+cd $HIERA_DIR \
+&& git fetch origin master \
+&& git reset --hard origin/master
+EOF
+echo "Hiera update completed."
+
+exit $?

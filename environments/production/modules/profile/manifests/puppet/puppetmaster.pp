@@ -10,5 +10,4 @@ class profile::puppet::puppetmaster{
     environment => $::environment,
     require     => [Package['ruby']],
   }
-  include ::puppet::hiera
 }

@@ -7,7 +7,13 @@ class dynaguppy::gitlab {
     project => 'puppet',
   }
 
-  $repository_uri = "git@${::gitlab_host}:puppet/puppet.git"
+  gitlab::shell::repo{'hiera':
+    group   => 'puppet',
+    project => 'hiera',
+  }
+
+  $puppet_repository_uri = "git@${::gitlab_host}:puppet/puppet.git"
+  $hiera_repository_uri  = "git@${::gitlab_host}:puppet/hiera.git"
   $puppetmaster_ssh_uri = "puppet@${::puppet_master_host}"
 
   gitlab::shell::repo::hook{'puppet_check_update':
@@ -46,6 +52,13 @@ class dynaguppy::gitlab {
   gitlab::shell::repo::hook{'post_receive_puppetmaster_push':
     path    => 'post-receive',
     target  => 'puppet_manifest',
-    content => template('dynaguppy/post-receive.erb'),
+    content => template('dynaguppy/post-receive.puppet.erb'),
+  }
+
+  # This hook script pushes updates to hiera data store
+  gitlab::shell::repo::hook{'post_receive_hiera_push':
+    path    => 'post-receive',
+    target  => 'hiera',
+    content => template('dynaguppy/post-receive.hiera.erb'),
   }
 }

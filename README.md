@@ -156,7 +156,9 @@ There are a number of tasks in the Gitlab server's manifest that time out or not
 
 The Gitlab server should be up and running on HTTPS as the default web site.
 
-## Git push to Puppetmaster configuration
+## Git push to Puppetmaster configurations
+
+### Set up the puppetmaster user on GitLab
 
 The puppet manifests will have primed the puppetmaster and the gitlab site for integration, but a number of manual steps are required to complete this.
 
@@ -167,15 +169,18 @@ The puppet manifests will have primed the puppetmaster and the gitlab site for i
 1. Once the `puppetmaster` user has been created return to the admin area.
 1. Select the `puppetmaster` user from the list of users.
 1. Click on the **Edit** icon and use the administrator tools to set the `puppetmaster`user's password. Keep a record of this new password.
-1. Go to the Gitlab admin area and select the `puppet/puppet` project.
+1. Go to the Gitlab admin area and select the `puppet` group.
 1. Click the edit icon on the group members panel.
 1. Add the sit `Administrator` and the `puppetmaster` user.
-1. Set both users as **owner** of the `puppet/puppet` project.
+1. Set both users as **owner** of the `puppet` group.
 1. Log out of the Gitlab application.
 1. Log into the Gitlab application as the `puppetmaster` user, use the password set previously.
 1. Go to the `puppetmaster` user's profile settings and add the puppetmaster's public key as a ssh key. This should allow the puppet user to push to and pull from the `puppet/puppet` project.
 1. Check the Gitlab application dashboard, it should list the `puppet/puppet` project in the **Project** tab, click on it.
 1. Take note of the ssh URI for the `puppet/puppet` project. It should be similar to `git@git.local:puppet/puppet.git` (this URI will be used as an example in these instructions, substitute it for the correct one)
+1. Take note of the ssh URI for the `puppet/hiera` project. It should be similar to `git@git.local:puppet/hiera.git` (this URI will be used as an example in these instructions, substitute it for the correct one)
+
+### Initial commit of the Puppet manifest
 1. Log into the puppetmaster server as root
 1. Clear the librarian-puppet cache with:
 
@@ -210,7 +215,7 @@ The puppet manifests will have primed the puppetmaster and the gitlab site for i
     # ssh git@git.local
     ```
 
-1. Add the Gitlab repository as a remote:
+1. Add the Gitlab puppet repository as a remote:
 
     ```
     # git remote add origin git@git.local:puppet/puppet.git
@@ -222,15 +227,65 @@ The puppet manifests will have primed the puppetmaster and the gitlab site for i
     # git push -u origin master
     ```
 
-Dynaguppy should now have the puppetmaster directory environments syncronised with the puppet repository and it's branches on the Gitlab application.
+
+Dynaguppy should now have the puppetmaster directory environments synchronised with the puppet repository and it's branches on the Gitlab application.
 
 It should now be safe to reduce the Puppetmaster Gitlab user's permissions to **Reporter**. It is also recommended that another user other than the Administrator is made **Owner** of the `puppet/puppet` project.
 
-**Note**: Git pushes to the `puppet/puppet` project may take some time, especially when changes have been made to the `Puppetfile` and trigger a librarian-puppet run.
+**Note**: Git pushes to the `puppet/puppet` project may take some time, especially when changes have been made to the `Puppetfile` and trigger a librarian-puppet run. If other behaviour is required edit the [git hook script](environment/production/modules/dynaguppy/templates/post-receive.puppet.erb).
+
+### Initial commit of the Hiera datastore
+1. Log into the puppetmaster server as root
+
+1. Change to the puppet user:
+
+    ```
+    # su -l puppet
+    ```
+
+1. Change to the hiera directory:
+
+    ```
+    # cd /etc/puppet/hiera
+    ```
+
+1. Check that all the contents belong to the puppet user.
+1. Initialise with git, add all files and commit:
+
+    ```
+    # git init
+    # git add -A
+    # git commit -m 'Initial commit'
+    ```
+
+1. Verify access to Gitlab with ssh, it should respond with `Welcome to GitLab, Puppet Master!` and not `Welcome to GitLab, Anonymous!`:
+
+    ```
+    # ssh git@git.local
+    ```
+
+1. Add the Gitlab hiera repository as a remote:
+
+    ```
+    # git remote add origin git@git.local:puppet/hiera.git
+    ```
+
+1. Push to the repository
+
+    ```
+    # git push -u origin master
+    ```
+
+
+Dynaguppy should now have the puppetmaster Hiera datastore synchronised with the puppet repository.
+
+It should now be safe to reduce the Puppetmaster Gitlab user's permissions to **Reporter**. It is also recommended that another user other than the Administrator is made **Owner** of the `puppet/hiera` project.
+
+**Note**: Git pushes to the master branch of the `puppet/hiera` project will be pushed to the Puppetmaster as a new hiera configuration and datastore.
 
 # Role and Profile
 
-As Dynaguppy uses `librarian-puppet` to manage modules, most of the module subdirectories are ignored by Git, the exceptions are the `role` and the `profile` subdirectories.
+As Dynaguppy uses `librarian-puppet` to manage modules, most of the module subdirectories are ignored by Git, the exceptions are the `role` and the `profile` subdirectories. If other behaviour is required edit the [git hook script](environment/production/modules/dynaguppy/templates/post-receive.hiera.erb).
 
 The use of roles and profiles in Dynaguppy is based on the [presentation and examples](https://github.com/hunner/roles_and_profiles) by [Hunter Haugen](https://github.com/hunner) at [PuppetConf 2013](http://puppetconf.com/), which is in turn was based on a [similar presentation](http://www.slideshare.net/PuppetLabs/roles-talk) given by Craig Dunn at [Puppet Camp Stockholm 2013](http://puppetlabs.com/community/puppet-camp#previous).
 

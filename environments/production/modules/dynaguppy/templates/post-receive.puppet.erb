@@ -11,7 +11,7 @@ read oldrev newrev refname
 
 # CHANGE THESE! They need to match your environment.
 # Read URLs are recommended as they don't require authentication
-REPO="<%= @repository_uri %>"
+REPO="<%= @puppet_repository_uri %>"
 BRANCH=`echo $refname | sed -n 's/^refs\/heads\///p'`
 PUPPET_ENV_DIR="/etc/puppet/environments"
 SSH_DEST="<%= @puppetmaster_ssh_uri %>"
@@ -55,7 +55,7 @@ else
 && git clone -b $BRANCH $REPO $BRANCH_REAL --recursive ; }
 echo 'Checking Puppetfile'
 cd $PUPPET_ENV_DIR/$BRANCH_REAL
-/usr/local/dynaguppy/bin/librarian-puppet-helper.sh /
+/usr/local/dynaguppy/bin/librarian-puppet-helper.sh \
 || echo 'WARNING: librarian-puppet helper script failed!'
 EOF
   echo "Update completed."

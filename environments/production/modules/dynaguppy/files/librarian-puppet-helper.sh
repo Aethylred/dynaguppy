@@ -29,6 +29,9 @@ if git show --pretty --no-color --name-only | grep Puppetfile > /dev/null 2>&1 ;
       if echo $output | grep 'Could not resolve the dependencies.' ; then
         logger -isd -p syslog.error -t DYNAGUPPY 'Initialising Dynaguppy Puppet module library failed, could not resolve the dependencies. Exiting.'
         break
+      elif echo $output | grep 'Unable to find module' ; then
+        logger -isd -p syslog.error -t DYNAGUPPY 'Updating Dynaguppy Puppet module library failed, could not find new modules. Exiting.'
+        break
       fi
       logger -isd -p syslog.warning -t DYNAGUPPY 'Initialising Dynaguppy Puppet module library failed, retrying'
     done

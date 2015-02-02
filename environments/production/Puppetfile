@@ -23,8 +23,8 @@ mod 'saz-ssh', '2.4.0'
 # Require updated versions
 
 # Aethylred's modules
-mod 'Aethylred-puppet', '1.5.1'
+mod 'Aethylred-puppet', '1.5.2'
 mod 'Aethylred-puppetdashboard', '1.0.7'
 mod 'Aethylred-git', '0.3.1'
-mod 'Aethylred-gitlab', '0.5.4'
+mod 'Aethylred-gitlab', '0.5.6'
 mod 'Aethylred-keymaster', '0.2.1'
