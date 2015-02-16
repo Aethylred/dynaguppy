@@ -2,7 +2,7 @@
 
 DYNAmic Git managed pUPPet, Yeah!
 
-Dynaguppy](dynaguppy) is a self-deploying Puppet configuration that uses [Git](git) to manage Puppet Environments by mapping them to branches from a code repository.
+Dynaguppy](dynaguppy) is a self-deploying Puppet configuration that uses [Git](git) to manage Puppet Environments by mapping them to branches from a code repository. There is more detail on how Dynaguppy is set up in the [internal documentation](environments/production/README.md).
 [dynaguppy]:https://github.com/Aethylred/dynaguppy
 [git]:http://git-scm.com/
 
@@ -287,7 +287,7 @@ It should now be safe to reduce the Puppetmaster Gitlab user's permissions to **
 
 As Dynaguppy uses `librarian-puppet` to manage modules, most of the module subdirectories are ignored by Git, the exceptions are the `role` and the `profile` subdirectories. If other behaviour is required edit the [git hook script](environment/production/modules/dynaguppy/templates/post-receive.hiera.erb).
 
-The use of roles and profiles in Dynaguppy is based on the [presentation and examples](https://github.com/hunner/roles_and_profiles) by [Hunter Haugen](https://github.com/hunner) at [PuppetConf 2013](http://puppetconf.com/), which is in turn was based on a [similar presentation](http://www.slideshare.net/PuppetLabs/roles-talk) given by Craig Dunn at [Puppet Camp Stockholm 2013](http://puppetlabs.com/community/puppet-camp#previous).
+The use of roles and profiles in the Dynaguppy Framework is based on the [presentation and examples](https://github.com/hunner/roles_and_profiles) by [Hunter Haugen](https://github.com/hunner) at [PuppetConf 2013](http://puppetconf.com/), which is in turn was based on a [similar presentation](http://www.slideshare.net/PuppetLabs/roles-talk) given by Craig Dunn at [Puppet Camp Stockholm 2013](http://puppetlabs.com/community/puppet-camp#previous).
 
 # Git Hook Scripts
 
