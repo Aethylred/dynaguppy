@@ -16,4 +16,10 @@ class dynaguppy::puppetmaster{
     mode   => '0755',
     source => 'puppet:///modules/dynaguppy/librarian-puppet-helper.sh',
   }
+
+  # Puppet user needs to be able to restart apache without a password
+  sudo::conf { 'puppet_apache2restart':
+    priority => 60,
+    content  => 'puppet ALL = NOPASSWD: /etc/init.d/apache2 restart',
+  }
 }

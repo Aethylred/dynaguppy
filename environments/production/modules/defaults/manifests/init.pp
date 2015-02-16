@@ -4,6 +4,8 @@ class defaults (
   $puppet       = true
 ) {
 
+  include defaults::sudo
+
   if $repositories {
     include defaults::repositories
   }

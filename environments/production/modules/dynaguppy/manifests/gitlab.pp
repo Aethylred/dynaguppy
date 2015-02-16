@@ -60,5 +60,6 @@ class dynaguppy::gitlab {
     path    => 'post-receive',
     target  => 'hiera',
     content => template('dynaguppy/post-receive.hiera.erb'),
+    require => Sudo::Conf['puppet_apache2restart'],
   }
 }
