@@ -37,6 +37,11 @@ ssh $SSH_DEST /bin/sh <<EOF
 cd $HIERA_DIR \
 && git fetch origin master \
 && git reset --hard origin/master
+git show --pretty --no-color --name-only | grep hiera.yaml > /dev/null 2>&1 \
+&& { echo 'hiera.yaml updated restarting Puppetmaster/Apache'; \
+sudo /etc/init.d/apache2 restart ; } \
+|| echo 'hiera.yaml not updated, no services restarted.'
+
 EOF
 echo "Hiera update completed."
 
