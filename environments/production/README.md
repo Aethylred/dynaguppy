@@ -61,9 +61,7 @@ Dependant modules will be auto-resolved by `librarain-puppet`, which may be assi
 
 #### The `librarian-puppet` configuration
 
-The `librarian-puppet` configuration is set up to do two main things;
+The `librarian-puppet` [configuration](.librarian/puppet/config) is set up to do two main things;
 
-* Install the externam puppet modules in to the `library` folder
+* Install the external puppet modules in to the `library` folder
 * Use `/tmp/librarian-puppet` to cache the External puppet modules.
-
-This file may also be used to tune other settings for `librarian-puppet` on the Puppetmaster.
